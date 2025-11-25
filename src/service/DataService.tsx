@@ -1,9 +1,48 @@
 import axios from "axios";
 
-import { Game } from "@/models/game.ts";
+import { Game, PlayerMark } from "@/models/game.ts";
 
-export async function createGame(id: string): Promise<Game> {
-  const { data } = await axios.post<Game>(`/games/${id}`);
+
+export async function createGame(): Promise<Game> {
+  const { data } = await axios.post<Game>(`/api/games`);
+
+  return data;
+}
+
+export async function createAiGame(
+  human: PlayerMark,
+  ai: PlayerMark,
+): Promise<Game> {
+  const { data } = await axios.post<Game>(
+    `/api/games/ai?human=${human}&ai=${ai}`,
+  );
+
+  return data;
+}
+
+export async function getGame(gameId: string): Promise<Game> {
+  const { data } = await axios.get<Game>(`/api/games/${gameId}`);
+
+  return data;
+}
+
+export async function playMove(
+  gameId: string,
+  row: number,
+  col: number,
+): Promise<Game> {
+  const { data } = await axios.post<Game>(`/api/games/${gameId}/move`, {
+    row,
+    col,
+  });
+
+  return data;
+}
+
+export async function createGameFromSession(sessionId: string): Promise<Game> {
+  const { data } = await axios.post<Game>(
+    `/api/games/session/${sessionId}/start`,
+  );
 
   return data;
 }
