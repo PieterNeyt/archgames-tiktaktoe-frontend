@@ -36,7 +36,7 @@ export default function Home() {
         <Select
           className="w-48"
           label="Choose your mark"
-          selectedKeys={new Set([human])}
+          selectedKeys={human ? new Set([human]) : new Set()}
           onSelectionChange={(keys) => {
             const value = Array.from(keys)[0] as PlayerMark;
 
