@@ -36,16 +36,15 @@ export default function Home() {
         <Select
           className="w-48"
           label="Choose your mark"
-          selectedKeys={[human]}
-          onSelectionChange={(e) => setHuman([...e][0] as PlayerMark)}
-        >
-          <SelectItem key="X" value="X">
-            X
-          </SelectItem>
+          selectedKeys={new Set([human])}
+          onSelectionChange={(keys) => {
+            const value = Array.from(keys)[0] as PlayerMark;
 
-          <SelectItem key="O" value="O">
-            O
-          </SelectItem>
+            setHuman(value);
+          }}
+        >
+          <SelectItem key="X">X</SelectItem>
+          <SelectItem key="O">O</SelectItem>
         </Select>
 
         <Button
