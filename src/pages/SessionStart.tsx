@@ -3,10 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import { useStartGameFromSession } from "@/hooks/useGames";
+import { useSession } from "@/context/SessionContext.tsx";
 
 export default function SessionStart() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
+  const { setSessionId } = useSession();
 
   const startGame = useStartGameFromSession();
 
@@ -17,12 +19,14 @@ export default function SessionStart() {
       { sessionId },
       {
         onSuccess: () => {
-          navigate(`/`);
+          setSessionId(sessionId);
+
+          navigate(`/home`);
         },
-        onError: () => {
-          alert("Invalid or expired session");
-          navigate("/");
-        },
+        // onError: () => {
+        //   alert("Invalid or expired session");
+        //   navigate("/");
+        // },
       },
     );
   }, [sessionId]);
