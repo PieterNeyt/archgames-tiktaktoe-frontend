@@ -3,15 +3,16 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  base: "/ttt/",
+  build: {
+    outDir: "./dist/ttt",
+  },
   plugins: [react(), tsconfigPaths(), tailwindcss()],
   server: {
     proxy: {
-      "/api": {
+      "/ttt/api": {
         target: "http://localhost:8085",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/ttt/api"),
       },
     },
   },
