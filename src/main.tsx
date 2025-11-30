@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={"/ttt"}>
           <Provider>
             <App />
           </Provider>

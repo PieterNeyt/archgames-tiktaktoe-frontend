@@ -2,9 +2,8 @@ import axios from "axios";
 
 import { Game, PlayerMark } from "@/models/game.ts";
 
-
 export async function createGame(): Promise<Game> {
-  const { data } = await axios.post<Game>(`/api/games`);
+  const { data } = await axios.post<Game>(`/ttt/api/games`);
 
   return data;
 }
@@ -14,14 +13,14 @@ export async function createAiGame(
   ai: PlayerMark,
 ): Promise<Game> {
   const { data } = await axios.post<Game>(
-    `/api/games/ai?human=${human}&ai=${ai}`,
+    `/ttt/api/games/ai?human=${human}&ai=${ai}`,
   );
 
   return data;
 }
 
 export async function getGame(gameId: string): Promise<Game> {
-  const { data } = await axios.get<Game>(`/api/games/${gameId}`);
+  const { data } = await axios.get<Game>(`/ttt/api/games/${gameId}`);
 
   return data;
 }
@@ -31,7 +30,7 @@ export async function playMove(
   row: number,
   col: number,
 ): Promise<Game> {
-  const { data } = await axios.post<Game>(`/api/games/${gameId}/move`, {
+  const { data } = await axios.post<Game>(`/ttt/api/games/${gameId}/move`, {
     row,
     col,
   });
@@ -41,7 +40,7 @@ export async function playMove(
 
 export async function createGameFromSession(sessionId: string): Promise<Game> {
   const { data } = await axios.post<Game>(
-    `/api/games/session/${sessionId}/start`,
+    `/ttt/api/games/session/${sessionId}/start`,
   );
 
   return data;
