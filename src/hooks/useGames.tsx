@@ -1,24 +1,33 @@
+// src/hooks/useGames.ts
+
 import type { Game, PlayerMark } from "@/models/game";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
-  createAiGame,
-  createGame,
-  createGameFromSession,
-  getGame,
-  playMove,
+    createAiGame,
+    createGame, createGameFromSession,
+    getGame,
+    playMove,
 } from "../service/DataService";
 
+import { useSession } from "@/context/SessionContext"; // Importeer de hook
+
 export function useCreateGame() {
+  const { sessionId } = useSession(); // Haal de sessionId op
+
   return useMutation<Game>({
-    mutationFn: () => createGame(),
+    // Geef de sessionId door aan createGame
+    mutationFn: () => createGame(sessionId),
   });
 }
 
 export function useCreateAiGame() {
+  const { sessionId } = useSession(); // Haal de sessionId op
+
   return useMutation<Game, Error, { human: PlayerMark; ai: PlayerMark }>({
-    mutationFn: ({ human, ai }) => createAiGame(human, ai),
+    // Geef de sessionId door aan createAiGame
+    mutationFn: ({ human, ai }) => createAiGame(sessionId, human, ai),
   });
 }
 
