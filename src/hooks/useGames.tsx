@@ -5,10 +5,11 @@ import type { Game, PlayerMark } from "@/models/game";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
-    createAiGame,
-    createGame, createGameFromSession,
-    getGame,
-    playMove,
+  createAiGame,
+  createGame,
+  createGameFromSession,
+  getGame,
+  playMove,
 } from "../service/DataService";
 
 import { useSession } from "@/context/SessionContext"; // Importeer de hook
