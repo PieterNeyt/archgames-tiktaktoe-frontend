@@ -1,71 +1,50 @@
 // src/service/DataService.ts
-
 import axios from "axios";
-
 import { Game, PlayerMark } from "@/models/game.ts";
 
-export async function createGame(sessionId: string | null): Promise<Game> {
-  if (sessionId) {
-    const { data } = await axios.post<Game>(
-      `/ttt/api/games/session/${sessionId}/start`,
-    );
+const API_BASE = "/ttt/api/games";
 
-    return data;
-  }
-
-  throw new Error("Game creation requires a sessionId.");
+export async function startGameVsAi(
+    sessionId: string,
+    lobbyId: string,
+    human: PlayerMark
+): Promise<Game> {
+  const ai = human === "X" ? "O" : "X";
+  const { data } = await axios.post<Game>(
+      `${API_BASE}/session/${sessionId}/start-singleplayer`,
+      null,
+      { params: { lobbyId, human, ai } }
+  );
+  return data;
 }
 
-export async function createAiGame(
-  sessionId: string | null,
-  human: PlayerMark,
-  ai: PlayerMark,
+export async function startGameVsPlayer(
+    sessionId: string,
+    lobbyId: string
 ): Promise<Game> {
-  if (sessionId) {
-    const { data } = await axios.post<Game>(
-      `/ttt/api/games/session/${sessionId}/start?human=${human}&ai=${ai}`,
-    );
-
-    return data;
-  }
-  // Zie opmerking in createGame.
-  throw new Error("AI Game creation requires a sessionId.");
+  const { data } = await axios.post<Game>(
+      `${API_BASE}/session/${sessionId}/start-multiplayer`,
+      null,
+      { params: { lobbyId } }
+  );
+  return data;
 }
 
 export async function getGame(gameId: string): Promise<Game> {
-  const { data } = await axios.get<Game>(`/ttt/api/games/${gameId}`);
-
+  const { data } = await axios.get<Game>(`${API_BASE}/${gameId}`);
   return data;
 }
 
 export async function playMove(
-  gameId: string,
-  row: number,
-  col: number,
+    sessionId: string, // Belangrijk voor backend validatie: wie doet de zet?
+    gameId: string,
+    row: number,
+    col: number
 ): Promise<Game> {
-  const { data } = await axios.post<Game>(`/ttt/api/games/${gameId}/move`, {
+  const { data } = await axios.post<Game>(`${API_BASE}/${gameId}/move`, {
+    sessionId,
     row,
     col,
   });
-
-  return data;
-}
-
-// createGameFromSession is niet meer nodig, omdat de logica nu in createGame zit.
-export async function createGameFromSession(sessionId: string): Promise<Game> {
-  const { data } = await axios.post<Game>(
-    `/ttt/api/games/session/${sessionId}/start`,
-  );
-
-  return data;
-}
-
-export async function createMultiplayerGameFromSession(
-  sessionId: string,
-): Promise<Game> {
-  const { data } = await axios.post<Game>(
-    `/ttt/api/games/session/${sessionId}/startmultiplayer`,
-  );
-
   return data;
 }

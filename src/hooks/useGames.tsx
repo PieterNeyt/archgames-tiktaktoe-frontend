@@ -1,62 +1,34 @@
-// src/hooks/useGames.ts
-
-import type { Game, PlayerMark } from "@/models/game";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import * as DataService from "../service/DataService";
+import { PlayerMark } from "@/models/game";
 
-import {
-  createAiGame,
-  createGame,
-  createGameFromSession,
-  getGame,
-  playMove,
-} from "../service/DataService";
-
-import { useSession } from "@/context/SessionContext"; // Importeer de hook
-
-export function useCreateGame() {
-  const { sessionId } = useSession(); // Haal de sessionId op
-
-  return useMutation<Game>({
-    // Geef de sessionId door aan createGame
-    mutationFn: () => createGame(sessionId),
+export function useOxoGame(sessionId: string, lobbyId: string) {
+  const navigate = useNavigate();
+  useQueryClient();
+  const startAi = useMutation({
+    mutationFn: (human: PlayerMark) => DataService.startGameVsAi(sessionId, lobbyId, human),
+    onSuccess: (game) => navigate(`/${lobbyId}/${sessionId}/play/${game.gameId}`),
   });
-}
 
-export function useCreateAiGame() {
-  const { sessionId } = useSession(); // Haal de sessionId op
-
-  return useMutation<Game, Error, { human: PlayerMark; ai: PlayerMark }>({
-    // Geef de sessionId door aan createAiGame
-    mutationFn: ({ human, ai }) => createAiGame(sessionId, human, ai),
-  });
-}
-
-export function useGame(gameId: string) {
-  const query = useQuery<Game>({
-    queryKey: ["game", gameId],
-    queryFn: () => getGame(gameId),
+  const startPlayer = useMutation({
+    mutationFn: () => DataService.startGameVsPlayer(sessionId, lobbyId),
+    onSuccess: (game) => navigate(`/${lobbyId}/${sessionId}/play/${game.gameId}`),
   });
 
   return {
-    game: query.data,
-    loading: query.isLoading,
-    error: query.error,
-    refetch: query.refetch,
+    startAi: startAi.mutate,
+    isStartingAi: startAi.isPending,
+    startPlayer: startPlayer.mutate,
+    isStartingPlayer: startPlayer.isPending,
   };
 }
 
-export function usePlayMove(gameId: string) {
-  const qc = useQueryClient();
-
-  return useMutation<Game, Error, { row: number; col: number }>({
-    mutationFn: ({ row, col }) => playMove(gameId, row, col),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["game", gameId] }),
-  });
-}
-
-export function useStartGameFromSession() {
-  return useMutation<Game, Error, { sessionId: string }>({
-    mutationFn: ({ sessionId }) => createGameFromSession(sessionId),
+export function useGameDetails(gameId: string) {
+  return useQuery({
+    queryKey: ["game", gameId],
+    queryFn: () => DataService.getGame(gameId),
+    refetchInterval: 2000, // Polling voor multiplayer (zolang je geen WebSockets gebruikt)
   });
 }
