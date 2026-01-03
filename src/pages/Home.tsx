@@ -27,7 +27,7 @@ export default function Home() {
 
                 <div className="border-t pt-4">
                     <Select
-                        label="Kies je teken"
+                        label="Choose your character"
                         selectedKeys={[human as string]}
                         onSelectionChange={(keys) => setHuman(Array.from(keys)[0] as PlayerMark)}
                     >

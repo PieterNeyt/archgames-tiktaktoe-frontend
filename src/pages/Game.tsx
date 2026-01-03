@@ -55,7 +55,7 @@ export default function GamePage() {
         ) : (
             <>
               <h2 className="text-lg font-semibold">
-                Jij bent:{" "}
+                You are:{" "}
                 <span className="text-primary">{game.myMark}</span>
               </h2>
 
