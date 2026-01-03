@@ -25,10 +25,10 @@ export function useOxoGame(sessionId: string, lobbyId: string) {
   };
 }
 
-export function useGameDetails(gameId: string) {
+export function useGameDetails(gameId: string, sessionId: string) {
   return useQuery({
-    queryKey: ["game", gameId],
-    queryFn: () => DataService.getGame(gameId),
-    refetchInterval: 2000, // Polling voor multiplayer (zolang je geen WebSockets gebruikt)
+    queryKey: ["game", gameId, sessionId],
+    queryFn: () => DataService.getGame(gameId, sessionId),
+    refetchInterval: 2000,
   });
 }

@@ -9,4 +9,5 @@ export type Game = {
   aiPlayer: PlayerMark;
   gameStatus: GameStatus;
   winner: PlayerMark;
+  myMark: PlayerMark;
 };

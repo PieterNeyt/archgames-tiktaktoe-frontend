@@ -30,10 +30,13 @@ export async function startGameVsPlayer(
   return data;
 }
 
-export async function getGame(gameId: string): Promise<Game> {
-  const { data } = await axios.get<Game>(`${API_BASE}/${gameId}`);
+export async function getGame(gameId: string, sessionId: string): Promise<Game> {
+  const { data } = await axios.get<Game>(`/ttt/api/games/${gameId}`, {
+    params: { sessionId },
+  });
   return data;
 }
+
 
 export async function playMove(
     sessionId: string, // Belangrijk voor backend validatie: wie doet de zet?

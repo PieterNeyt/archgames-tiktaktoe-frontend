@@ -16,11 +16,6 @@ function App() {
       {/* GamePage volgt de structuur van Dammen */}
       <Route element={<GamePage />} path="/:lobbyId/:sessionId/play/:gameId" />
 
-      {/* Fallback route */}
-      <Route
-        element={<div>Navigeer via het platform naar /lobbyId/sessionId</div>}
-        path="/"
-      />
     </Routes>
   );
 }
