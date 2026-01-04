@@ -1,37 +1,21 @@
+// App.tsx
 import { Route, Routes } from "react-router-dom";
 
 import GamePage from "@/pages/Game";
-import SessionStart from "@/pages/SessionStart";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import Forbidden from "@/pages/Forbidden";
 import Home from "@/pages/Home.tsx";
+import Forbidden from "@/pages/Forbidden";
 
 function App() {
   return (
     <Routes>
       <Route element={<Forbidden />} path="/403" />
 
-      <Route element={<SessionStart />} path="/session/:sessionId" />
+      {/* HomePage krijgt nu direct lobbyId en sessionId uit de URL */}
+      <Route element={<Home />} path="/:lobbyId/:sessionId" />
 
-      {/* The game menu, only accessible after valid session */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-        path="/home"
-      />
+      {/* GamePage volgt de structuur van Dammen */}
+      <Route element={<GamePage />} path="/:lobbyId/:sessionId/play/:gameId" />
 
-      {/* Protected game */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <GamePage />
-          </ProtectedRoute>
-        }
-        path="/game/:id"
-      />
     </Routes>
   );
 }
